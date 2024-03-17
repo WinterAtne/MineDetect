@@ -9,6 +9,11 @@ const char x = 16;
 const char y = 16;
 const char bombs = 15;
 
+char PlayerDied = 0;
+char PlayerWon = 0;
+char PlayerQuit = 0;
+
+
 char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   xSize += 2;
   ySize += 1;
@@ -35,12 +40,32 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   return field;
 }
 
+
+
 int main(int argc, int** argv) {
+  //Initialization
   short* field_size;
   char* hidden_field = GenerateField(x, y, bombs, field_size);
-  for (int i = 0; i < *field_size; i++) {
-    putchar(hidden_field[i]);
+  
+  
+  // Main Loop
+  while (!PlayerDied || !PlayerWon || !PlayerQuit) {
+    //Initialize Loop;
+
+    char* command = (char*)calloc(8, sizeof(char));
+
+    //Draw
+    for (int i = 0; i < *field_size; i++) {
+      putchar(hidden_field[i]);
+    }
+    
+    //User input
+    fgets(command, sizeof(command), stdin);
+
   }
+  
+  //Exit
+
   return 0;
 }
 
