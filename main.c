@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #define NOINFO '#'
 #define CLEAR '_'
@@ -15,15 +16,32 @@ bool PlayerWon = false;
 bool PlayerQuit = false;
 
 
+short XYToAbsolute(char x, char y, short fieldX, short field_size) {
+  short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 2;
+
+  if (field_size <= ret) return -1;
+  return ret;
+}
+
 char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   xSize += 2;
   ySize += 1;
   *retsize = xSize * ySize;
   char* field = (char*)malloc(*retsize * sizeof(char));
   
+  srand (time(NULL));
+
   for (short i = 0; i < *retsize; i++) {
-    
     field[i] = CLEAR;
+  }
+  
+  for (char i = 0; i <= numBombs; i++) {
+    char x = (rand() % (xSize - 2)) + 'A';
+    char y = (rand() % (ySize - 1)) + 'A';
+    short pos = XYToAbsolute(x, y, xSize - 2, *retsize);
+    field[pos] = FLAG;
+
+    printf("%c, %c, %d, \n", x, y, pos);
   }
   
   //Format Collumn indexes
@@ -50,14 +68,6 @@ void FlagTile(short position) {
   printf("Flagging tile: %d \n", position);
 }
 
-short XYToAbsolute(char x, char y, short fieldX, short field_size) {
-  short ret = ((fieldX + 2) * (y - 'A')) + 
-               (x - 'A') + ((y - 'A') * 2) +
-               fieldX + 4;
-  if (field_size <= ret) return -1;
-
-  return ret;
-}
 
 int main(int argc, int** argv) {
   //Initialization
@@ -85,7 +95,7 @@ int main(int argc, int** argv) {
     }
     
     short position = XYToAbsolute(command[2], command[3], 16, *field_size);
-    if (-1 == position) {
+    if (0 > position) {
       printf("Invalid input, please eneter real input.\n");
       continue;
     }
