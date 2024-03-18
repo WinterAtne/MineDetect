@@ -23,7 +23,7 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   
   for (short i = 0; i < *retsize; i++) {
     
-    field[i] = NOINFO;
+    field[i] = CLEAR;
   }
   
   //Format Collumn indexes
@@ -35,7 +35,7 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   //Format Columns, row index && line-breaks;
   for (short i = xSize-1; i < *retsize; i+=xSize) {
     field[i] = '\n';
-    field[i+1] = ((i/xSize) % 10) + '0';
+    field[i+1] = (i/xSize) + 'A';
   }
   
   return field;
@@ -43,7 +43,7 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
 
 bool ClearTile(short position) {
   printf("Clearing tile: %d \n", position);
-  return true;
+  return false;
 }
 
 void FlagTile(short position) {
@@ -51,8 +51,8 @@ void FlagTile(short position) {
 }
 
 short XYToAbsolute(char x, char y, short fieldX, short field_size) {
-  short ret = ((fieldX + 2) * (y - '0')) + 
-               (x - 'A') + ((y - '0') * 2) +
+  short ret = ((fieldX + 2) * (y - 'A')) + 
+               (x - 'A') + ((y - 'A') * 2) +
                fieldX + 4;
   if (field_size <= ret) return -1;
 
