@@ -28,20 +28,25 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   ySize += 1;
   *retsize = xSize * ySize;
   char* field = (char*)malloc(*retsize * sizeof(char));
+  char bomb_hint_offsets[8] = { -19, -18, -17, -1, 1, 17, 18, 19 };
   
   srand (time(NULL));
 
   for (short i = 0; i < *retsize; i++) {
-    field[i] = CLEAR;
+    field[i] = '0';
   }
   
-  for (char i = 0; i <= numBombs; i++) {
+  for (char i = 0; i < numBombs; i++) {
     char x = (rand() % (xSize - 2)) + 'A';
     char y = (rand() % (ySize - 1)) + 'A';
     short pos = XYToAbsolute(x, y, xSize - 2, *retsize);
     field[pos] = FLAG;
-
-    printf("%c, %c, %d, \n", x, y, pos);
+    
+    for (char k = 0; k < 8; k++) {
+      if (field[bomb_hint_offsets[k]+pos] != FLAG) {
+        field[bomb_hint_offsets[k]+pos] += 1;
+      }
+    } 
   }
   
   //Format Collumn indexes
@@ -72,7 +77,7 @@ void FlagTile(short position) {
 int main(int argc, int** argv) {
   //Initialization
   short* field_size;
-  char* hidden_field = GenerateField(16, 16, 15, field_size);
+  char* hidden_field = GenerateField(16, 16, 32, field_size);
   
   
   // Main Loop
