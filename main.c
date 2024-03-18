@@ -118,7 +118,15 @@ int main(int argc, int** argv) {
   }
   
   //Exit
+  if (PlayerQuit) {
+    printf("QUITTING!\n");
+  } else if (PlayerDied) {
+    printf("YOU DIED!\n");
+  } else if (PlayerWon) {
+    printf("YOU WON!\n");
+  }
 
+  
   return 0;
 }
 
