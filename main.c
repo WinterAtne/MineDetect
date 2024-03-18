@@ -80,9 +80,11 @@ int main(int argc, int** argv) {
     if (quit == command[0]) break;
     
     short position = XYToAbsolute(command[2], command[3], 16, *field_size);
+    if (-1 == position) printf("Invalid Input, please select real input. \n"); continue;
 
     if (clear == command[0]) ClearTile(position);
     else if (flag == command[0]) FlagTile(position);
+    else printf("Invalid Input, please select real input.\n");
   }
   
   //Exit
