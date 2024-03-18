@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define NOINFO '#'
 #define CLEAR '_'
@@ -9,9 +10,9 @@ const char quit = 'q';
 const char flag = 'f';
 const char clear = 'c';
 
-char PlayerDied = 0;
-char PlayerWon = 0;
-char PlayerQuit = 0;
+bool PlayerDied = false;
+bool PlayerWon = false;
+bool PlayerQuit = false;
 
 
 char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
@@ -40,8 +41,9 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   return field;
 }
 
-void ClearTile(short position) {
+bool ClearTile(short position) {
   printf("Clearing tile: %d \n", position);
+  return true;
 }
 
 void FlagTile(short position) {
@@ -64,7 +66,7 @@ int main(int argc, int** argv) {
   
   
   // Main Loop
-  while (!PlayerDied || !PlayerWon || !PlayerQuit) {
+  while (!PlayerDied && !PlayerWon && !PlayerQuit) {
     //Initialize Loop;
 
 
@@ -77,14 +79,27 @@ int main(int argc, int** argv) {
     char command[8];
 
     fgets(command, sizeof(command), stdin);
-    if (quit == command[0]) break;
+    if (quit == command[0]) { //We do this here so that we don't attempt to get the position
+      PlayerQuit = true;
+      break;
+    }
     
     short position = XYToAbsolute(command[2], command[3], 16, *field_size);
-    if (-1 == position) printf("Invalid Input, please select real input. \n"); continue;
+    if (-1 == position) {
+      printf("Invalid input, please eneter real input.\n");
+      continue;
+    }
 
-    if (clear == command[0]) ClearTile(position);
-    else if (flag == command[0]) FlagTile(position);
-    else printf("Invalid Input, please select real input.\n");
+    if (clear == command[0]) {
+      PlayerDied = ClearTile(position);
+    }
+    else if (flag == command[0]) {
+      FlagTile(position);
+    }
+    else {
+      printf("Invalid Input, please select real input.\n");
+    }
+
   }
   
   //Exit
