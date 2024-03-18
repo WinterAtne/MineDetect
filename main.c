@@ -5,9 +5,9 @@
 #define CLEAR '_'
 #define FLAG '!'
 
-const char x = 16;
-const char y = 16;
-const char bombs = 15;
+const char quit = 'q';
+const char flag = 'f';
+const char clear = 'c';
 
 char PlayerDied = 0;
 char PlayerWon = 0;
@@ -40,19 +40,33 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   return field;
 }
 
+void ClearTile(short position) {
+  printf("Clearing tile: %d \n", position);
+}
 
+void FlagTile(short position) {
+  printf("Flagging tile: %d \n", position);
+}
+
+short XYToAbsolute(char x, char y, short fieldX, short field_size) {
+  short ret = ((fieldX + 2) * (y - '0')) + 
+               (x - 'A') + ((y - '0') * 2) +
+               fieldX + 4;
+  if (field_size <= ret) return -1;
+
+  return ret;
+}
 
 int main(int argc, int** argv) {
   //Initialization
   short* field_size;
-  char* hidden_field = GenerateField(x, y, bombs, field_size);
+  char* hidden_field = GenerateField(16, 16, 15, field_size);
   
   
   // Main Loop
   while (!PlayerDied || !PlayerWon || !PlayerQuit) {
     //Initialize Loop;
 
-    char* command = (char*)calloc(8, sizeof(char));
 
     //Draw
     for (int i = 0; i < *field_size; i++) {
@@ -60,13 +74,19 @@ int main(int argc, int** argv) {
     }
     
     //User input
-    fgets(command, sizeof(command), stdin);
+    char command[8];
 
+    fgets(command, sizeof(command), stdin);
+    if (quit == command[0]) break;
+    
+    short position = XYToAbsolute(command[2], command[3], 16, *field_size);
+
+    if (clear == command[0]) ClearTile(position);
+    else if (flag == command[0]) FlagTile(position);
   }
   
   //Exit
 
   return 0;
 }
-
 
