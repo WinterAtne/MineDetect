@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <string.h>
 
 #define NOINFO '#'
 #define CLEAR '_'
@@ -61,6 +62,8 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
     field[i+1] = (i/xSize) + 'A';
   }
   
+  
+  
   return field;
 }
 
@@ -78,7 +81,8 @@ int main(int argc, int** argv) {
   //Initialization
   short* field_size;
   char* hidden_field = GenerateField(16, 16, 32, field_size);
-  
+  char* shown_field = (char*)malloc(*field_size * sizeof(char));
+  shown_field = memcpy(shown_field, hidden_field, *field_size);
   
   // Main Loop
   while (!PlayerDied && !PlayerWon && !PlayerQuit) {
@@ -126,7 +130,8 @@ int main(int argc, int** argv) {
     printf("YOU WON!\n");
   }
 
-  
+  free(hidden_field);
+  free(shown_field);
   return 0;
 }
 
