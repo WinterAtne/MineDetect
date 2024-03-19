@@ -29,6 +29,7 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   ySize += 1;
   *retsize = xSize * ySize;
   char* field = (char*)malloc(*retsize * sizeof(char));
+  printf("Welcome to MineSweep!\n"); // Not having this here causes random segfaults;
   char bomb_hint_offsets[8] = { -19, -18, -17, -1, 1, 17, 18, 19 };
   
   srand (time(NULL));
@@ -79,7 +80,7 @@ void FlagTile(short position) {
 
 int main(int argc, int** argv) {
   //Initialization
-  short* field_size;
+  short* field_size = (short*)malloc(sizeof(short));
   char* hidden_field = GenerateField(16, 16, 32, field_size);
   char* shown_field = (char*)malloc(*field_size * sizeof(char));
   shown_field = memcpy(shown_field, hidden_field, *field_size);
@@ -132,6 +133,7 @@ int main(int argc, int** argv) {
 
   free(hidden_field);
   free(shown_field);
+  free(field_size);
   return 0;
 }
 
