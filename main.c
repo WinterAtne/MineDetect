@@ -20,7 +20,7 @@ bool PlayerQuit = false;
 short XYToAbsolute(char x, char y, short fieldX, short field_size) {
   short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 5;
 
-  if (field_size <= ret) return -1;
+  if (field_size < ret) return -1;
   return ret;
 }
 
@@ -68,8 +68,12 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   return field;
 }
 
-bool ClearTile(short position) {
-  printf("Clearing tile: %d \n", position);
+bool ClearTile(short position, char* hidden_field, char* shown_field) {
+  if (hidden_field[position] == FLAG) {
+    return true;
+  }
+
+  shown_field[position] = hidden_field[position];
   return false;
 }
 
@@ -113,17 +117,18 @@ int main(int argc, int** argv) {
       break;
     }
     
-    short position = XYToAbsolute(command[2], command[3], 16, *field_size);
+    short position = XYToAbsolute(command[2], command[3], x, *field_size);
+    printf("%d\n", position);
     if (0 > position) {
       printf("Invalid input, please eneter real input.\n");
       continue;
     }
 
     if (clear == command[0]) {
-      PlayerDied = ClearTile(position);
+      PlayerDied = ClearTile(position - 2, hidden_field, shown_field);
     }
     else if (flag == command[0]) {
-      FlagTile(position);
+      FlagTile(position - 2);
     }
     else {
       printf("Invalid Input, please select real input.\n");
