@@ -104,13 +104,20 @@ bool ClearTile(short position, char* hidden_field, char* shown_field, short fiel
   return false;
 }
 
-void FlagTile(short position, char* shown_field) {
+bool FlagTile(short position, char* shown_field, char* hidden_field, char* discovered_bombs, char numBombs) {
   if (shown_field[position] != NOINFO) {
-    return;
+    return false;
   }
   
   shown_field[position] = FLAG;
+  if (hidden_field[position] == FLAG) {
+    *discovered_bombs += 1;
+    if (*discovered_bombs == numBombs) {
+      return true;
+    }
+  }
 
+  return false;
 }
 
 
@@ -118,8 +125,9 @@ int main(int argc, int** argv) {
   //Initialization
   char x = 16;
   char y = 16;
-  char bombs = 32;
+  char bombs = 2;
   short* field_size = (short*)malloc(sizeof(short));
+  char* discovered_bombs = (char*)calloc(1, sizeof(char));
 
   char* hidden_field = GenerateField(x, y, bombs, field_size);
   char* shown_field = (char*)malloc(*field_size * sizeof(char));
@@ -159,7 +167,7 @@ int main(int argc, int** argv) {
       PlayerDied = ClearTile(position - 2, hidden_field, shown_field, *field_size);
     }
     else if (flag == command[0]) {
-      FlagTile(position - 2, shown_field);
+      PlayerWon = FlagTile(position - 2, shown_field, hidden_field, discovered_bombs, bombs);
     }
     else {
       printf("Invalid Input, please select real input.\n");
