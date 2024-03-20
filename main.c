@@ -35,7 +35,7 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   srand (time(NULL));
 
   for (short i = 0; i < *retsize; i++) {
-    field[i] = '0';
+    field[i] = CLEAR;
   }
   
   for (char i = 0; i < numBombs; i++) {
@@ -50,6 +50,9 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
     
     for (char k = 0; k < 8; k++) {
       if (field[tile_offsets[k]+pos] != FLAG) {
+        if (field[tile_offsets[k] + pos] == CLEAR) {
+          field[tile_offsets[k]+ pos] = '0';
+        }
         field[tile_offsets[k]+pos] += 1;
       }
     } 
@@ -79,7 +82,7 @@ void RecursiveClearTile(short position, char* hidden_field, char* shown_field, s
       continue;
     }
     
-    if (hidden_field[offset_position] == '0') {
+    if (hidden_field[offset_position] == CLEAR) {
       shown_field[offset_position] = hidden_field[offset_position];
       RecursiveClearTile(offset_position, hidden_field, shown_field, field_size);
     }
@@ -97,7 +100,7 @@ bool ClearTile(short position, char* hidden_field, char* shown_field, short fiel
   }
   
   shown_field[position] = hidden_field[position];
-  if (shown_field[position] == '0') {
+  if (shown_field[position] == CLEAR) {
     RecursiveClearTile(position, hidden_field, shown_field, field_size);
   }
 
@@ -125,7 +128,7 @@ int main(int argc, int** argv) {
   //Initialization
   char x = 16;
   char y = 16;
-  char bombs = 2;
+  char bombs = 42;
   short* field_size = (short*)malloc(sizeof(short));
   char* discovered_bombs = (char*)calloc(1, sizeof(char));
 
