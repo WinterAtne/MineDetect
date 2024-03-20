@@ -118,7 +118,6 @@ int main(int argc, int** argv) {
     }
     
     short position = XYToAbsolute(command[2], command[3], x, *field_size);
-    printf("%d\n", position);
     if (0 > position) {
       printf("Invalid input, please eneter real input.\n");
       continue;
