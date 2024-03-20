@@ -95,6 +95,10 @@ void RecursiveClearTile(short position, char* hidden_field, char* shown_field, s
 }
 
 bool ClearTile(short position, char* hidden_field, char* shown_field, short field_size) {
+  if (shown_field[position] == FLAG) {
+    return false;
+  }
+
   if (hidden_field[position] == FLAG) {
     return true;
   }
