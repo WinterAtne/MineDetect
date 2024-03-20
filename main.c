@@ -18,7 +18,7 @@ bool PlayerQuit = false;
 
 
 short XYToAbsolute(char x, char y, short fieldX, short field_size) {
-  short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 2;
+  short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 4;
 
   if (field_size <= ret) return -1;
   return ret;
