@@ -42,6 +42,10 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
     char x = (rand() % (xSize - 2)) + 'A';
     char y = (rand() % (ySize - 1)) + 'A';
     short pos = XYToAbsolute(x, y, xSize - 2, *retsize);
+    if (field[pos] == FLAG) { //Lets us try again if we hit the same spot twice;
+      i--;
+      continue;
+    } 
     field[pos] = FLAG;
     
     for (char k = 0; k < 8; k++) {
