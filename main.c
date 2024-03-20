@@ -16,6 +16,7 @@ bool PlayerDied = false;
 bool PlayerWon = false;
 bool PlayerQuit = false;
 
+char tile_offsets[8] = { -19, -18, -17, -1, 1, 17, 18, 19 };
 
 short XYToAbsolute(char x, char y, short fieldX, short field_size) {
   short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 5;
@@ -30,7 +31,6 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   *retsize = xSize * ySize;
   char* field = (char*)malloc(*retsize * sizeof(char));
   printf("Welcome to MineSweep!\n"); // Not having this here causes random segfaults;
-  char bomb_hint_offsets[8] = { -19, -18, -17, -1, 1, 17, 18, 19 };
   
   srand (time(NULL));
 
@@ -45,8 +45,8 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
     field[pos] = FLAG;
     
     for (char k = 0; k < 8; k++) {
-      if (field[bomb_hint_offsets[k]+pos] != FLAG) {
-        field[bomb_hint_offsets[k]+pos] += 1;
+      if (field[tile_offsets[k]+pos] != FLAG) {
+        field[tile_offsets[k]+pos] += 1;
       }
     } 
   }
@@ -68,12 +68,35 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
   return field;
 }
 
-bool ClearTile(short position, char* hidden_field, char* shown_field) {
+void RecursiveClearTile(short position, char* hidden_field, char* shown_field, short field_size) {
+  for (int i = 0; i < 8; i++) {
+    short offset_position = position + tile_offsets[i];
+    if (offset_position >= field_size || offset_position <= 0 || shown_field[offset_position] != NOINFO) {
+      continue;
+    }
+    
+    if (hidden_field[offset_position] == '0') {
+      shown_field[offset_position] = hidden_field[offset_position];
+      RecursiveClearTile(offset_position, hidden_field, shown_field, field_size);
+    }
+    
+    if (hidden_field[offset_position] > '0' && hidden_field[offset_position] < '9') {
+      shown_field[offset_position] = hidden_field[offset_position];
+    }
+
+  }
+}
+
+bool ClearTile(short position, char* hidden_field, char* shown_field, short field_size) {
   if (hidden_field[position] == FLAG) {
     return true;
   }
-
+  
   shown_field[position] = hidden_field[position];
+  if (shown_field[position] == '0') {
+    RecursiveClearTile(position, hidden_field, shown_field, field_size);
+  }
+
   return false;
 }
 
@@ -129,7 +152,7 @@ int main(int argc, int** argv) {
     }
 
     if (clear == command[0]) {
-      PlayerDied = ClearTile(position - 2, hidden_field, shown_field);
+      PlayerDied = ClearTile(position - 2, hidden_field, shown_field, *field_size);
     }
     else if (flag == command[0]) {
       FlagTile(position - 2, shown_field);
@@ -137,7 +160,6 @@ int main(int argc, int** argv) {
     else {
       printf("Invalid Input, please select real input.\n");
     }
-
   }
   
   //Exit
