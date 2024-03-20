@@ -77,8 +77,13 @@ bool ClearTile(short position, char* hidden_field, char* shown_field) {
   return false;
 }
 
-void FlagTile(short position) {
-  printf("Flagging tile: %d \n", position);
+void FlagTile(short position, char* shown_field) {
+  if (shown_field[position] != NOINFO) {
+    return;
+  }
+  
+  shown_field[position] = FLAG;
+
 }
 
 
@@ -127,7 +132,7 @@ int main(int argc, int** argv) {
       PlayerDied = ClearTile(position - 2, hidden_field, shown_field);
     }
     else if (flag == command[0]) {
-      FlagTile(position - 2);
+      FlagTile(position - 2, shown_field);
     }
     else {
       printf("Invalid Input, please select real input.\n");
