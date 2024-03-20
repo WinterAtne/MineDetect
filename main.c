@@ -18,7 +18,7 @@ bool PlayerQuit = false;
 
 
 short XYToAbsolute(char x, char y, short fieldX, short field_size) {
-  short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 4;
+  short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 5;
 
   if (field_size <= ret) return -1;
   return ret;
@@ -80,10 +80,19 @@ void FlagTile(short position) {
 
 int main(int argc, int** argv) {
   //Initialization
+  char x = 16;
+  char y = 16;
+  char bombs = 32;
   short* field_size = (short*)malloc(sizeof(short));
-  char* hidden_field = GenerateField(16, 16, 32, field_size);
+
+  char* hidden_field = GenerateField(x, y, bombs, field_size);
   char* shown_field = (char*)malloc(*field_size * sizeof(char));
   shown_field = memcpy(shown_field, hidden_field, *field_size);
+  for (char i = 'A' - 2; i < 'A' + x - 2; i++) {
+    for (char k = 'A'; k < 'A' + y; k++) {
+      shown_field[XYToAbsolute(i, k, x, *field_size)] = NOINFO;
+    }
+  }
   
   // Main Loop
   while (!PlayerDied && !PlayerWon && !PlayerQuit) {
@@ -92,7 +101,7 @@ int main(int argc, int** argv) {
 
     //Draw
     for (int i = 0; i < *field_size; i++) {
-      putchar(hidden_field[i]);
+      putchar(shown_field[i]);
     }
     
     //User input
