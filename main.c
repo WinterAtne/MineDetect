@@ -65,13 +65,13 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
 	//Format Collumn indexes
 	field[0] = '-';
 	for (char i = 1; i < xSize - 1; i++) {
-		//field[i] = i + 'A' - 1;
+		field[i] = i + 'A' - 1;
 	}
 	
 	//Format Columns, row index && line-breaks;
 	for (short i = xSize-1; i < *retsize; i+=xSize) {
 		field[i] = '\n';
-		//field[i+1] = (i/xSize) + 'A';
+		field[i+1] = (i/xSize) + 'A';
 	}
 	
 	
