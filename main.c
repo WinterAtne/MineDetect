@@ -16,10 +16,8 @@ bool PlayerDied = false;
 bool PlayerWon = false;
 bool PlayerQuit = false;
 
-char tile_offsets[8] = { -19, -18, -17, -1, 1, 17, 18, 19 };
-
-char verticle_offset[9] = { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
-char side_offset[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+char verticle_offset[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+char side_offset[8] = {     -1,  0,  1,-1, 1,-1, 0, 1 };
 
 short XYToAbsolute(char x, char y, short fieldX, short field_size) {
 	short ret = ((fieldX + 2) * (y - 'A')) + (x - 'A') + fieldX + 5;
@@ -41,6 +39,7 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
 		field[i] = CLEAR;
 	}
 	
+	//Place Bombs
 	for (char i = 0; i < numBombs; i++) {
 		char x = (rand() % (xSize - 2)) + 'A';
 		char y = (rand() % (ySize - 1)) + 'A';
@@ -49,17 +48,20 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
 			i--;
 			continue;
 		} 
-	 printf("%i\n", pos);
 		field[pos] = FLAG;
 		
 		for (char k = 0; k < 8; k++) {
-			if (field[tile_offsets[k]+pos] != FLAG) {
-				if (field[tile_offsets[k] + pos] == CLEAR) {
-					field[tile_offsets[k]+ pos] = '0';
-				}
-				field[tile_offsets[k]+pos] += 1;
+			short offset = verticle_offset[k] * (xSize) + side_offset[k] + pos;
+
+			if (field[offset] == CLEAR) {
+				field[offset] = '0';
 			}
-		} 
+
+			if (field[offset] >= '0' && field[offset] <= '9') {
+				field[offset]++;
+				continue;
+			}
+		}
 	}
 	
 	//Format Collumn indexes
@@ -79,16 +81,16 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
 	return field;
 }
 
-void RecursiveClearTile(short position, char* hidden_field, char* shown_field, short field_size) {
+void RecursiveClearTile(short position, char xSize, char* hidden_field, char* shown_field, short field_size) {
 	for (int i = 0; i < 8; i++) {
-		short offset_position = position + tile_offsets[i];
+		short offset_position = verticle_offset[i] * (xSize + 2) + side_offset[i] + position; 
 		if (offset_position >= field_size || offset_position <= 0 || shown_field[offset_position] != NOINFO) {
 			continue;
 		}
 		
 		if (hidden_field[offset_position] == CLEAR) {
 			shown_field[offset_position] = hidden_field[offset_position];
-			RecursiveClearTile(offset_position, hidden_field, shown_field, field_size);
+			RecursiveClearTile(offset_position, xSize, hidden_field, shown_field, field_size);
 		}
 		
 		if (hidden_field[offset_position] > '0' && hidden_field[offset_position] < '9') {
@@ -98,7 +100,7 @@ void RecursiveClearTile(short position, char* hidden_field, char* shown_field, s
 	}
 }
 
-bool ClearTile(short position, char* hidden_field, char* shown_field, short field_size) {
+bool ClearTile(short position, char xSize, char* hidden_field, char* shown_field, short field_size) {
 	if (shown_field[position] == FLAG) {
 		return false;
 	}
@@ -109,7 +111,7 @@ bool ClearTile(short position, char* hidden_field, char* shown_field, short fiel
 	
 	shown_field[position] = hidden_field[position];
 	if (shown_field[position] == CLEAR) {
-		RecursiveClearTile(position, hidden_field, shown_field, field_size);
+		RecursiveClearTile(position, xSize, hidden_field, shown_field, field_size);
 	}
 
 	return false;
@@ -136,7 +138,7 @@ int main(int argc, char** argv) {
 	//Initialization
 	char x = 16;
 	char y = 16;
-	char bombs = 42;
+	char bombs = 16;
 	short* field_size = (short*)malloc(sizeof(short));
 	char* discovered_bombs = (char*)calloc(1, sizeof(char));
 
@@ -175,7 +177,7 @@ int main(int argc, char** argv) {
 		}
 
 		if (clear == command[0]) {
-			PlayerDied = ClearTile(position - 2, hidden_field, shown_field, *field_size);
+			PlayerDied = ClearTile(position - 2, x, hidden_field, shown_field, *field_size);
 		}
 		else if (flag == command[0]) {
 			PlayerWon = FlagTile(position - 2, shown_field, hidden_field, discovered_bombs, bombs);
