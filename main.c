@@ -44,14 +44,14 @@ char* GenerateField(char xSize, char ySize, char numBombs, short* retsize) {
 		char x = (rand() % (xSize - 2)) + 'A';
 		char y = (rand() % (ySize - 1)) + 'A';
 		short pos = XYToAbsolute(x, y, xSize - 2, *retsize);
-		if (field[pos] == FLAG) { //Lets us try again if we hit the same spot twice;
+		if (field[pos] == FLAG) { //Let us try again if we hit the same spot twice;
 			i--;
 			continue;
 		} 
-		field[pos] = FLAG;
+		field[pos - 2] = FLAG;
 		
 		for (char k = 0; k < 8; k++) {
-			short offset = verticle_offset[k] * (xSize) + side_offset[k] + pos;
+			short offset = verticle_offset[k] * (xSize) + side_offset[k] + pos - 2;
 
 			if (field[offset] == CLEAR) {
 				field[offset] = '0';
@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
 	//Initialization
 	char x = 16;
 	char y = 16;
-	char bombs = 16;
+	char bombs = 42;
 	short* field_size = (short*)malloc(sizeof(short));
 	char* discovered_bombs = (char*)calloc(1, sizeof(char));
 
