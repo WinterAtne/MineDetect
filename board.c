@@ -1,6 +1,7 @@
 //Define the board, and functions for working with it
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 //Define the board elements besides numbers
 #define CLEAR  '_'
@@ -24,35 +25,35 @@ typedef struct XYPosition {
 
 XYPosition AbsoluteToXY(Board* board, short position) {
 	XYPosition xy;
-	xy.y = board->sizeY % position;
-	xy.x = position - (xy.y * position);
+	xy.y = position / board->sizeY;
+	xy.x = position - (xy.y * board->sizeY);
 	return xy;
 }
 
-short XYToAbsolute(Board* board, XYPosition xy) {
-	return xy.x + xy.y;
+short XYToAbsolute(Board* board, char x, char y) {
+	return y * board->sizeY + x;
 }
 
 //callback takes in the board and a position
 void CallOnNeighbors(void (*callback)(Board*, short), Board* board, short position) {
-	char offsetX[8] = { -1, 0, -1, -1, 1, -1, 0, -1 };
-	char offsetY[8] = { -1, -1, -1, 0, 0, 1, 1, 1};
+	char offsetX[8] = { -1,  0,  1, -1,  1, -1,  0,  1 };
+	char offsetY[8] = { -1, -1, -1,  0,  0,  1,  1,  1};
 	XYPosition xy = AbsoluteToXY(board, position);
 
 	for (short i = 0; i < 8; i++) {
-		XYPosition relative;
-		relative.x = xy.x - offsetX[i];
-		if (0 > relative.x || relative.x > board->sizeX) continue;
-		relative.y = xy.y - offsetY[i];
-		if (0 > relative.y || relative.y > board->sizeY) continue;
+		char x = xy.x + offsetX[i];
+		char y = xy.y + offsetY[i];
+		printf("%i, %i \n", x, y);
+		if (0 > x || x > board->sizeX - 1) continue;
+		if (0 > y || y > board->sizeY - 1) continue;
 
-		short neighbor = XYToAbsolute(board, relative);
+		short neighbor = XYToAbsolute(board, x, y);
 		callback(board, neighbor);
 	}
 }
 
 void SetHint(Board* board, short position) {
-	if (board->field[position] != FLAG) {
+	if (board->field[position] == FLAG) {
 		return;
 	}
 
@@ -64,6 +65,7 @@ void SetHint(Board* board, short position) {
 }
 
 Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
+	srand(time(NULL));
 	
 	//Initialize Board
 	Board *board = (Board*) malloc(sizeof(Board));
@@ -80,9 +82,10 @@ Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 
 
 	//Place Bombs
-	srand(time(NULL));
-	for (char i = 0; i < numBombs; i++) {
-		short position = rand() % board->size;
+	for (char i = 0; i < board->numBombs; i++) {
+		short x = rand() % board->sizeX;
+		short y = rand() % board->sizeY;
+		short position = XYToAbsolute(board, x, y);
 		if (board->field[position] == FLAG || position == init_pos) {
 			i--;
 			continue;
@@ -95,3 +98,16 @@ Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 	//Return board and assume caller calls free()
 	return board;
 }
+
+//int main() {
+//	Board *board = GenerateBoard(16, 16, 16, 0);
+//	for (short y = 0; y < board->sizeY; y++) {
+//		for (short x = 0; x < board->sizeX; x++) {
+//			putchar(board->field[XYToAbsolute(board, x, y)]);
+//		}
+//		
+//		putchar('\n');
+//	}
+//	return 0;
+//}
+

@@ -4,7 +4,10 @@
 #include <time.h>
 #include <string.h>
 
-#include "board.c"
+#define CLEAR  '_'
+#define FLAG   '!'
+#define NOINFO '#'
+
 
 const char quit = 'q';
 const char flag = 'f';
@@ -143,11 +146,11 @@ int main(int argc, char** argv) {
 	char* hidden_field = GenerateField(x, y, bombs, field_size);
 	char* shown_field = (char*)malloc(*field_size * sizeof(char));
 	shown_field = memcpy(shown_field, hidden_field, *field_size);
-	for (char i = 'A' - 2; i < 'A' + x - 2; i++) {
-		for (char k = 'A'; k < 'A' + y; k++) {
-			shown_field[XYToAbsolute(i, k, x, *field_size)] = NOINFO;
-		}
-	}
+//	for (char i = 'A' - 2; i < 'A' + x - 2; i++) {
+//		for (char k = 'A'; k < 'A' + y; k++) {
+//			shown_field[XYToAbsolute(i, k, x, *field_size)] = NOINFO;
+//		}
+//	}
 	
 	// Main Loop
 	while (!PlayerDied && !PlayerWon && !PlayerQuit) {
