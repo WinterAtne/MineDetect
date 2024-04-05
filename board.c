@@ -42,7 +42,9 @@ void CallOnNeighbors(void (*callback)(Board*, short), Board* board, short positi
 	for (short i = 0; i < 8; i++) {
 		XYPosition relative;
 		relative.x = xy.x - offsetX[i];
+		if (0 > relative.x || relative.x > board->sizeX) continue;
 		relative.y = xy.y - offsetY[i];
+		if (0 > relative.y || relative.y > board->sizeY) continue;
 
 		short neighbor = XYToAbsolute(board, relative);
 		callback(board, neighbor);
@@ -61,7 +63,7 @@ void SetHint(Board* board, short position) {
 	board->field[position]++;
 }
 
-Board* GenerateBoard(char sizeX, char sizeY, char numBombs) {
+Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 	
 	//Initialize Board
 	Board *board = (Board*) malloc(sizeof(Board));
@@ -81,7 +83,7 @@ Board* GenerateBoard(char sizeX, char sizeY, char numBombs) {
 	srand(time(NULL));
 	for (char i = 0; i < numBombs; i++) {
 		short position = rand() % board->size;
-		if (board->field[position] == FLAG) {
+		if (board->field[position] == FLAG || position == init_pos) {
 			i--;
 			continue;
 		}
