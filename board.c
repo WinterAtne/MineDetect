@@ -7,6 +7,7 @@
 #define FLAG   '!'
 #define NOINFO '#'
 
+//Define a board
 typedef struct Board {
 	char sizeX;
 	char sizeY;
@@ -15,9 +16,24 @@ typedef struct Board {
 	char* field;
 } Board;
 
+//Define an XY position
+typedef struct XYPosition {
+	char x;
+	char y;
+} XYPosition;
+
+XYPosition AbsoluteToXY(Board* board, short position) {
+	XYPosition relative;
+	relative.y = board->sizeY % position;
+	relative.x = position - (relative.y * position);
+	return relative;
+}
+
 //callback takes in the board and a position
 void CallOnNeighbors(void (*callback)(Board*, short), Board* board, short position) {
-	
+	for (short i = 0; i < 8; i++) {
+
+	}
 }
 
 void SetHint(Board* board, short position) {
