@@ -4,9 +4,7 @@
 #include <time.h>
 #include <string.h>
 
-#define NOINFO '#'
-#define CLEAR '_'
-#define FLAG '!'
+#include "board.c"
 
 const char quit = 'q';
 const char flag = 'f';
