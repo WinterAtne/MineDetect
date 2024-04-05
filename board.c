@@ -23,16 +23,29 @@ typedef struct XYPosition {
 } XYPosition;
 
 XYPosition AbsoluteToXY(Board* board, short position) {
-	XYPosition relative;
-	relative.y = board->sizeY % position;
-	relative.x = position - (relative.y * position);
-	return relative;
+	XYPosition xy;
+	xy.y = board->sizeY % position;
+	xy.x = position - (xy.y * position);
+	return xy;
+}
+
+short XYToAbsolute(Board* board, XYPosition xy) {
+	return xy.x + xy.y;
 }
 
 //callback takes in the board and a position
 void CallOnNeighbors(void (*callback)(Board*, short), Board* board, short position) {
-	for (short i = 0; i < 8; i++) {
+	char offsetX[8] = { -1, 0, -1, -1, 1, -1, 0, -1 };
+	char offsetY[8] = { -1, -1, -1, 0, 0, 1, 1, 1};
+	XYPosition xy = AbsoluteToXY(board, position);
 
+	for (short i = 0; i < 8; i++) {
+		XYPosition relative;
+		relative.x = xy.x - offsetX[i];
+		relative.y = xy.y - offsetY[i];
+
+		short neighbor = XYToAbsolute(board, relative);
+		callback(board, neighbor);
 	}
 }
 
