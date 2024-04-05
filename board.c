@@ -54,7 +54,7 @@ void SetHint(Board* board, short position) {
 		return;
 	}
 
-	if (board->field[position] == '0') {
+	if (board->field[position] == CLEAR) {
 		board->field[position] = '0';
 	}
 
