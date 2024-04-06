@@ -65,6 +65,10 @@ void SetHint(Board* board, Board* clear, short position) {
 }
 
 void ClearTile(Board* hidden, Board* clear, short position) {
+	if (hidden->field[position] == CLEAR && clear->field[position] == NOINFO) {
+		clear->field[position] = hidden->field[position];
+		CallOnNeighbors(ClearTile, hidden, clear, position);
+	}
 	clear->field[position] = hidden->field[position];
 }
 
