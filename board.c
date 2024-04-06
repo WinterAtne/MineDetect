@@ -36,7 +36,7 @@ short XYToAbsolute(Board* board, char x, char y) {
 }
 
 //callback takes in the board and a position
-void CallOnNeighbors(void (*callback)(Board*, short), Board* board, short position) {
+void CallOnNeighbors(void (*callback)(Board*, Board*, short), Board* board, Board* clear, short position) {
 	char offsetX[8] = { -1,  0,  1, -1,  1, -1,  0,  1 };
 	char offsetY[8] = { -1, -1, -1,  0,  0,  1,  1,  1};
 	XYPosition xy = AbsoluteToXY(board, position);
@@ -48,11 +48,11 @@ void CallOnNeighbors(void (*callback)(Board*, short), Board* board, short positi
 		if (0 > y || y > board->sizeY - 1) continue;
 
 		short neighbor = XYToAbsolute(board, x, y);
-		callback(board, neighbor);
+		callback(board, clear, neighbor);
 	}
 }
 
-void SetHint(Board* board, short position) {
+void SetHint(Board* board, Board* clear, short position) {
 	if (board->field[position] == FLAG) {
 		return;
 	}
@@ -62,6 +62,10 @@ void SetHint(Board* board, short position) {
 	}
 
 	board->field[position]++;
+}
+
+void ClearTile(Board* hidden, Board* clear, short position) {
+	clear->field[position] = hidden->field[position];
 }
 
 Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
@@ -92,7 +96,7 @@ Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 		}
 		board->field[position] = FLAG;
 		
-		CallOnNeighbors(SetHint, board, position);
+		CallOnNeighbors(SetHint, board, NULL, position);
 	}
 
 	return board;
@@ -105,6 +109,8 @@ Board* GenerateBlankBoard(Board* board, short init_pos) {
 	clear->field = (char*) malloc(clear->size);
 
 	memset(clear->field, NOINFO, clear->size * sizeof(char));
+
+	ClearTile(board, clear, init_pos);
 
 	return clear;
 }

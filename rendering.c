@@ -11,7 +11,7 @@
 #endif
 
 void DrawBoard(Board* board) {
-	clrscr();
+	//clrscr();
 	
 	//Create the collumn indices
 	putchar(' ');
@@ -33,7 +33,7 @@ void DrawBoard(Board* board) {
 
 //int main() {
 //	Board *hidden = GenerateBoard(16, 16, 42, 0);
-//	Board *clearboard = GenerateBlankBoard(hidden);
+//	Board *clearboard = GenerateBlankBoard(hidden, 0);
 //
 //	DrawBoard(clearboard);
 //	DrawBoard(hidden);
