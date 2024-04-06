@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 
 //Define the board elements besides numbers
-#define CLEAR  '_'
+#define CLEAR  ' '
 #define FLAG   '!'
 #define NOINFO '#'
 
@@ -94,8 +95,18 @@ Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 		CallOnNeighbors(SetHint, board, position);
 	}
 
-	//Return board and assume caller calls free()
 	return board;
+}
+
+Board* GenerateBlankBoard(Board* board, short init_pos) {
+	Board *clear = (Board*) malloc(sizeof(Board));
+	
+	*clear = *board;
+	clear->field = (char*) malloc(clear->size);
+
+	memset(clear->field, NOINFO, clear->size * sizeof(char));
+
+	return clear;
 }
 
 //int main() {

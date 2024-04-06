@@ -32,7 +32,10 @@ void DrawBoard(Board* board) {
 }
 
 //int main() {
-//	Board *board = GenerateBoard(16, 16, 42, 0);
-//	DrawBoard(board);
+//	Board *hidden = GenerateBoard(16, 16, 42, 0);
+//	Board *clearboard = GenerateBlankBoard(hidden);
+//
+//	DrawBoard(clearboard);
+//	DrawBoard(hidden);
 //	return 0;
 //}
