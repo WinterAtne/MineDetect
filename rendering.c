@@ -11,14 +11,24 @@
 #endif
 
 void DrawBoard(Board* board) {
+	clrscr();
+	
+	//Create the collumn indices
+	putchar(' ');
+	for (short x = 0; x < board->sizeX; x++) {
+		putchar('A' + x);
+	}
+	putchar('\n');
+	
 	for (short y = 0; y < board->sizeY; y++) {
+		putchar('A' + y); //Adds the row indices
+		
 		for (short x = 0; x < board->sizeX; x++) {
 			putchar(board->field[XYToAbsolute(board, x, y)]);
 		}
 		
 		putchar('\n');
 	}
-	
 }
 
 //int main() {
