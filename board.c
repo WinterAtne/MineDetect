@@ -43,7 +43,6 @@ void CallOnNeighbors(void (*callback)(Board*, short), Board* board, short positi
 	for (short i = 0; i < 8; i++) {
 		char x = xy.x + offsetX[i];
 		char y = xy.y + offsetY[i];
-		printf("%i, %i \n", x, y);
 		if (0 > x || x > board->sizeX - 1) continue;
 		if (0 > y || y > board->sizeY - 1) continue;
 
@@ -99,15 +98,15 @@ Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 	return board;
 }
 
-//int main() {
-//	Board *board = GenerateBoard(16, 16, 16, 0);
-//	for (short y = 0; y < board->sizeY; y++) {
-//		for (short x = 0; x < board->sizeX; x++) {
-//			putchar(board->field[XYToAbsolute(board, x, y)]);
-//		}
-//		
-//		putchar('\n');
-//	}
-//	return 0;
-//}
+int main() {
+	Board *board = GenerateBoard(16, 16, 16, 0);
+	for (short y = 0; y < board->sizeY; y++) {
+		for (short x = 0; x < board->sizeX; x++) {
+			putchar(board->field[XYToAbsolute(board, x, y)]);
+		}
+		
+		putchar('\n');
+	}
+	return 0;
+}
 
