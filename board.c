@@ -1,3 +1,4 @@
+#pragma once
 //Define the board, and functions for working with it
 #include <stdlib.h>
 #include <time.h>
@@ -106,17 +107,18 @@ Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 	return board;
 }
 
-Board* GenerateBlankBoard(Board* board, short init_pos) {
-	Board *clear = (Board*) malloc(sizeof(Board));
+Board* GenerateBlankBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
+	Board *blank = (Board*) malloc(sizeof(Board));
 	
-	*clear = *board;
-	clear->field = (char*) malloc(clear->size);
+	blank->sizeX = sizeX;
+	blank->sizeY = sizeY;
+	blank->size = sizeX * sizeY;
+	blank->numBombs = numBombs;
+	blank->field = (char*) malloc(blank->size);
 
-	memset(clear->field, NOINFO, clear->size * sizeof(char));
+	memset(blank->field, NOINFO, blank->size * sizeof(char));
 
-	ClearTile(board, clear, init_pos);
-
-	return clear;
+	return blank;
 }
 
 //int main() {

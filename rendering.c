@@ -1,3 +1,4 @@
+#pragma once
 //This handles rendering a board to the console
 #include <stdio.h>
 
@@ -11,7 +12,7 @@
 #endif
 
 void DrawBoard(Board* board) {
-	//clrscr();
+	clrscr();
 	
 	//Create the collumn indices
 	putchar(' ');
@@ -33,7 +34,7 @@ void DrawBoard(Board* board) {
 
 //int main() {
 //	Board *hidden = GenerateBoard(16, 16, 42, 0);
-//	Board *clearboard = GenerateBlankBoard(hidden, 0);
+//	Board *clearboard = GenerateBlankBoard(16, 16, 42, 0);
 //
 //	DrawBoard(clearboard);
 //	DrawBoard(hidden);
