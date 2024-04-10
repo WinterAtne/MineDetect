@@ -59,6 +59,14 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	if (died) {
+		printf("You Died :(\n");
+	} else if (won) {
+		printf("You Won! :3\n");
+	} else if (closed) {
+		printf("Closing Game\n");
+	}
+
 
 	free(shown);
 	free(hidden);
