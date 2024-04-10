@@ -33,7 +33,7 @@ XYPosition AbsoluteToXY(Board* board, short position) {
 }
 
 short XYToAbsolute(Board* board, char x, char y) {
-	return y * board->sizeY + x;
+	return y * board->sizeX + x;
 }
 
 //callback takes in the board and a position

@@ -2,11 +2,7 @@
 
 #include "board.c"
 #include "rendering.c"
-
-short test_in(Board* board, char* action) {
-	*action = 'c';
-	return 128;
-}
+#include "pc_input.c"
 
 int main(int argc, char** argv) {
 	//Board Properties
@@ -15,7 +11,7 @@ int main(int argc, char** argv) {
 	short numBombs = 42;
 	
 	//Input Properties
-	short (*input)(Board*, char*) = test_in; //This is the definition of our input method
+	short (*input)(Board*, char*) = pc_input; //This is the definition of our input method
 	short position = 0;
 	char action = 'c';
 
@@ -38,10 +34,9 @@ int main(int argc, char** argv) {
 	//Main Loop
 	while (!died && !won && !closed) {
 		DrawBoard(shown);
+
 		position = input(shown, &action);
 		ClearTile(hidden, shown, position);
-
-		won = true;
 	}
 
 
