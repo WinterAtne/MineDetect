@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 //Define the board elements besides numbers
 #define CLEAR  ' '
@@ -77,6 +78,10 @@ void FlagTile(Board* clear, short position) {
 	if (clear->field[position] == NOINFO) {
 		clear->field[position] = FLAG;
 	}
+}
+
+bool CheckTile(Board* hidden, short position) {
+	return (hidden->field[position] == FLAG);
 }
 
 Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {

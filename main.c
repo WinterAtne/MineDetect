@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
 		
 		switch (action) {
 			case 'c':
+				if (CheckTile(hidden, position)) died = true;
 				ClearTile(hidden, shown, position);
 				break;
 			case 'f':
