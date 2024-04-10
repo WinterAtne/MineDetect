@@ -73,6 +73,12 @@ void ClearTile(Board* hidden, Board* clear, short position) {
 	clear->field[position] = hidden->field[position];
 }
 
+void FlagTile(Board* clear, short position) {
+	if (clear->field[position] == NOINFO) {
+		clear->field[position] = FLAG;
+	}
+}
+
 Board* GenerateBoard(char sizeX, char sizeY, char numBombs, short init_pos) {
 	srand(time(NULL));
 	

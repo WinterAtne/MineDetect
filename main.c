@@ -29,14 +29,33 @@ int main(int argc, char** argv) {
 
 	//Create the hidden board
 	Board* hidden = GenerateBoard(sizeX, sizeY, numBombs, position);
-	ClearTile(hidden, shown, position);
+	switch (action) {
+		case 'c':
+			ClearTile(hidden, shown, position);
+			break;
+		case 'f':
+			FlagTile(shown, position);
+			break;
+		case 'q':
+			closed = true;
+	}
 
 	//Main Loop
 	while (!died && !won && !closed) {
 		DrawBoard(shown);
-
+		
 		position = input(shown, &action);
-		ClearTile(hidden, shown, position);
+		
+		switch (action) {
+			case 'c':
+				ClearTile(hidden, shown, position);
+				break;
+			case 'f':
+				FlagTile(shown, position);
+				break;
+			case 'q':
+				closed = true;
+		}
 	}
 
 
