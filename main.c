@@ -6,9 +6,9 @@
 
 int main(int argc, char** argv) {
 	//Board Properties
-	char sizeX = 16;
-	char sizeY = 16;
-	short numBombs = 42;
+	char sizeX = 8;
+	char sizeY = 8;
+	short numBombs = 1;
 	
 	//Input Properties
 	short (*input)(Board*, char*) = pc_input; //This is the definition of our input method
@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
 	bool died   = false;
 	bool won    = false;
 	bool closed = false;
+	short discoveredBombs = 0;
 
 	//Create & Draw the initial blank board
 	Board* shown = GenerateBlankBoard(sizeX, sizeY, numBombs, 0);
@@ -52,6 +53,12 @@ int main(int argc, char** argv) {
 				ClearTile(hidden, shown, position);
 				break;
 			case 'f':
+				if (CheckTile(hidden, position)) {
+					discoveredBombs++;
+					if (discoveredBombs == numBombs) {
+						won = true;
+					}
+				}
 				FlagTile(shown, position);
 				break;
 			case 'q':
