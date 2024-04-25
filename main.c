@@ -6,9 +6,9 @@
 
 int main(int argc, char** argv) {
 	//Board Properties
-	char sizeX = 8;
-	char sizeY = 8;
-	short numBombs = 1;
+	char sizeX = 16;
+	char sizeY = 16;
+	short numBombs = 42;
 	
 	//Input Properties
 	short (*input)(Board*, char*) = pc_input; //This is the definition of our input method
