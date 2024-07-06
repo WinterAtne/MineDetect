@@ -11,6 +11,10 @@
 #define FLAG   '!'
 #define NOINFO '#'
 
+char offsetY[8] = { -1, -1, -1,  0,  0,  1,  1,  1};
+char offsetX[8] = { -1,  0,  1, -1,  1, -1,  0,  1 };
+
+
 //Define a board
 typedef struct Board {
 	char sizeX;
@@ -39,8 +43,6 @@ short XYToAbsolute(Board* board, char x, char y) {
 
 //callback takes in the board and a position
 void CallOnNeighbors(void (*callback)(Board*, Board*, short), Board* board, Board* clear, short position) {
-	char offsetX[8] = { -1,  0,  1, -1,  1, -1,  0,  1 };
-	char offsetY[8] = { -1, -1, -1,  0,  0,  1,  1,  1};
 	XYPosition xy = AbsoluteToXY(board, position);
 
 	for (short i = 0; i < 8; i++) {
@@ -52,6 +54,25 @@ void CallOnNeighbors(void (*callback)(Board*, Board*, short), Board* board, Boar
 		short neighbor = XYToAbsolute(board, x, y);
 		callback(board, clear, neighbor);
 	}
+}
+
+short* GetNeighborIndicies(Board* board, short position) {
+	short* neighbors = calloc(8, sizeof(char));
+	XYPosition xy = AbsoluteToXY(board, position);
+
+	for (short i = 0; i < 8; i++) {
+		char x = xy.x + offsetX[i];
+		char y = xy.y + offsetY[i];
+		if ((0 > x || x > board->sizeX - 1) || (0 > y || y > board->sizeY - 1)) {
+			neighbors[i] = -1;
+			continue;
+		}
+
+		short neighbor = XYToAbsolute(board, x, y);
+		neighbors[i] = neighbor;
+	}
+
+	return neighbors;
 }
 
 void SetHint(Board* board, Board* clear, short position) {
