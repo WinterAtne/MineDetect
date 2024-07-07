@@ -1,17 +1,12 @@
 #pragma once
 // The AI input method
+#include <unistd.h>
 #include "board.c"
 
 
-short random_when_unknown = 0;
 
 short ai_input(Board* board, char* action) {
-	/* Methodology:
-	 * Loop through looking for number tiles, once one is found.
-	 * Count the number of flagged tiles around it. 
-	 * If the number of unflagged tiles = flagged tiles, flag all noinfo tiles,
-	*/
-	
+	// Simple Algorithm checking numbered tiles for neighboring bombs;
 	for (short tile = 0; tile < board->size; tile++) {
 		if (board->field[tile] < '0' || board->field[tile] > '9') continue;
 		
@@ -42,12 +37,18 @@ short ai_input(Board* board, char* action) {
 		}
 	}
 
-
-
 	printf("trying my best\n");
-	random_when_unknown += 10;
-	if (random_when_unknown > board->size) random_when_unknown = 0;
 	*action = 'c';
+	short random_when_unknown = 0;
+	while (true) {
+		if (board->field[random_when_unknown] == NOINFO) {
+			return random_when_unknown;
+		} else if (board->size < random_when_unknown) {
+			random_when_unknown = 0;
+		} else {
+			random_when_unknown++;
+		}
+	}
 	return random_when_unknown;
 }
 
