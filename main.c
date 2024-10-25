@@ -2,8 +2,16 @@
 
 #include "board.c"
 #include "rendering.c"
-#include "pc_input.c"
-#include "ai_input.c"
+
+// Define our input method
+short (*input)(Board*, char*);
+#ifdef AI
+	#include "ai_input.c"
+	short (*input)(Board*, char*) = ai_input;
+#else
+	#include "pc_input.c"
+	short (*input)(Board*, char*) = pc_input; //This is the definition of our input method
+#endif
 
 int main(int argc, char** argv) {
 	//Board Properties
@@ -12,7 +20,6 @@ int main(int argc, char** argv) {
 	short numBombs = 42;
 	
 	//Input Properties
-	short (*input)(Board*, char*) = ai_input; //This is the definition of our input method
 	short position = 0;
 	char action = 'c';
 
