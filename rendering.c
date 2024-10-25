@@ -4,12 +4,7 @@
 
 #include "board.c"
 
-//This portion of the code, and by extention clrscr is untested on windows
-#ifdef _WIN32
-#include <conio.h>
-#else
 #define clrscr() printf("\e[1;1H\e[2J")
-#endif
 
 void DrawBoard(Board* board) {
 	clrscr();
