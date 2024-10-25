@@ -37,7 +37,6 @@ short ai_input(Board* board, char* action) {
 		}
 	}
 
-	printf("trying my best\n");
 	*action = 'c';
 	short random_when_unknown = 0;
 	while (true) {
